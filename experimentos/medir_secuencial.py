@@ -4,22 +4,22 @@ import time
 
 from secuencial.kmeans_secuencial import kmeans_secuencial
 
-
-# Cargar datos
 X = np.load("datos/X.npy")
-
 centroides_iniciales = np.load(
     "datos/centroides_iniciales.npy"
 )
 
-# Número de repeticiones
-repeticiones = 3
-
+repeticiones = 5
 tiempos = []
 resultados = []
 
 print("EXPERIMENTO K-MEANS SECUENCIAL")
 print("--------------------------------")
+print("Puntos:", len(X))
+
+# Calentamiento previo, fuera del tiempo medido
+print("Ejecutando calentamiento...")
+kmeans_secuencial(X, centroides_iniciales)
 
 for repeticion in range(repeticiones):
 
@@ -32,10 +32,7 @@ for repeticion in range(repeticiones):
         )
     )
 
-    fin = time.perf_counter()
-
-    tiempo = fin - inicio
-
+    tiempo = time.perf_counter() - inicio
     tiempos.append(tiempo)
 
     resultados.append({
@@ -51,21 +48,22 @@ for repeticion in range(repeticiones):
         f"{tiempo:.6f} segundos"
     )
 
-
-# Calcular estadísticas
 media = np.mean(tiempos)
+mediana = np.median(tiempos)
 desviacion = np.std(tiempos, ddof=1)
 
 print("\nRESULTADOS FINALES")
 print("--------------------------------")
-
 print("Media:", media)
+print("Mediana:", mediana)
 print("Desviación estándar:", desviacion)
+print("Inercia:", inercia)
+print("Iteraciones:", iteraciones)
 
-# Guardar resultados
 df = pd.DataFrame(resultados)
 
 df["Media"] = media
+df["Mediana"] = mediana
 df["Desviacion_Estandar"] = desviacion
 
 nombre = (
@@ -76,3 +74,4 @@ nombre = (
 df.to_csv(nombre, index=False)
 
 print("\nArchivo guardado:", nombre)
+
