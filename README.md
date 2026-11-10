@@ -134,3 +134,64 @@ en las pruebas realizadas.
 
 El incremento del número de hilos no garantiza
 una mejora proporcional del rendimiento.
+
+## Implementación distribuida con MPI
+
+Se desarrolló una versión distribuida del algoritmo K-Means utilizando MPI mediante la biblioteca mpi4py.
+
+La implementación utiliza varios procesos para distribuir el conjunto de datos y realizar los cálculos de manera simultánea.
+
+Se utilizaron las siguientes técnicas:
+
+- Distribución de datos mediante `scatter`.
+- Comunicación entre procesos mediante `broadcast`.
+- Reducción de resultados mediante `Allreduce`.
+- Recolección de etiquetas mediante `gather`.
+- Actualización distribuida de centroides.
+- Verificación de convergencia.
+
+### Ejecutar K-Means con MPI
+
+Ejecutar con un proceso:
+
+```bash
+mpirun -np 1 python paralelo_mpi/kmeans_mpi.py
+```
+
+Ejecutar con dos procesos:
+
+```bash
+mpirun -np 2 python paralelo_mpi/kmeans_mpi.py
+```
+
+Ejecutar con cuatro procesos:
+
+```bash
+mpirun -np 4 python paralelo_mpi/kmeans_mpi.py
+```
+
+### Resultados de rendimiento MPI
+
+Se realizaron pruebas utilizando 1, 2 y 4 procesos MPI.
+
+| Procesos | Tiempo (s) | Speedup | Eficiencia |
+|---:|---:|---:|---:|
+| 1 | 0.4228 | 1.0000 | 100 % |
+| 2 | 0.2434 | 1.7371 | 86.85 % |
+| 4 | 0.1616 | 2.6163 | 65.41 % |
+
+En todas las ejecuciones se obtuvo una inercia de 736821.5648 y 29 iteraciones.
+
+### Gráficas de rendimiento MPI
+
+Se generaron las siguientes gráficas para analizar el comportamiento de la implementación:
+
+- `grafica_tiempos.png`: comparación de tiempos de ejecución.
+- `grafica_speedup.png`: aceleración obtenida al incrementar los procesos.
+- `grafica_eficiencia.png`: eficiencia paralela de la implementación.
+
+### Conclusión de MPI
+
+Los resultados muestran que al incrementar el número de procesos MPI se reduce el tiempo de ejecución. La configuración de cuatro procesos obtuvo el menor tiempo, mientras que la configuración de dos procesos presentó una mayor eficiencia paralela.
+
+El incremento de procesos no garantiza una mejora proporcional del rendimiento, debido a los costos de comunicación y sincronización entre procesos.
